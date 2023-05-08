@@ -12,8 +12,9 @@
       >
         <div class="w-full h-[600px] max-w-full">
           <img
-            :src="product.image"
-            :alt="product.image"
+            :src='"http://localhost/Tunezz/Tunezz/src/assets/" +product.image'
+            
+            alt="Product Image"
             class="w-full h-full object-cover rounded-md"
           />
         </div>
@@ -131,7 +132,7 @@
   </div>
 
   <!-- Review section -->
-  <div
+  <!-- <div
     class="w-full mx-auto px-4 py-8 flex flex-col lg:flex-row justify-evenly items-center"
   >
     <div class="mb-8 lg:w-2/3 p-10 w-full">
@@ -186,133 +187,122 @@
         </button>
       </form>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <!--SCRIPT-->
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted , reactive } from 'vue';
+import { useRoute } from 'vue-router';
+
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from "@headlessui/vue";
 // StarRating component
-const StarRating = {
-  props: ["rating"],
-  methods: {
-    setRating(rating) {
-      this.$emit("update:rating", rating);
-    },
-  },
-  template: `
-    <div>
-      <span
-        v-for="star in 5"
-        :key="star"
-        @click="setRating(star)"
-        :class="[
-          'text-yellow-400',
-          'hover:text-yellow-500',
-          'cursor-pointer',
-          star <= rating ? 'text-yellow-500' : 'text-gray-300'
-        ]"
-      >
-        &#9733;
-      </span>
-    </div>
-  `,
-};
+// const StarRating = {
+//   props: ["rating"],
+//   methods: {
+//     setRating(rating) {
+//       this.$emit("update:rating", rating);
+//     },
+//   },
+//   template: `
+//     <div>
+//       <span
+//         v-for="star in 5"
+//         :key="star"
+//         @click="setRating(star)"
+//         :class="[
+//           'text-yellow-400',
+//           'hover:text-yellow-500',
+//           'cursor-pointer',
+//           star <= rating ? 'text-yellow-500' : 'text-gray-300'
+//         ]"
+//       >
+//         &#9733;
+//       </span>
+//     </div>
+//   `,
+// };
 
-const reviews = [
-  {
-    id: 1,
-    email: "john@example.com",
-    date: "2023-05-10",
-    content: "Great product!",
-    rating: 5,
-  },
-  {
-    id: 1,
-    email: "john@example.com",
-    date: "2023-05-10",
-    content: "Great product!",
-    rating: 5,
-  },
-  {
-    id: 1,
-    email: "john@example.com",
-    date: "2023-05-10",
-    content: "Great product!",
-    rating: 5,
-  },
-  {
-    id: 2,
-    email: "jane@example.com",
-    date: "2023-05-09",
-    content: "Love it!",
-    rating: 4,
-  },
-  // Add more review objects here
-];
+// const reviews = [
+//   {
+//     id: 1,
+//     email: "john@example.com",
+//     date: "2023-05-10",
+//     content: "Great product!",
+//     rating: 5,
+//   },
+//   {
+//     id: 1,
+//     email: "john@example.com",
+//     date: "2023-05-10",
+//     content: "Great product!",
+//     rating: 5,
+//   },
+//   {
+//     id: 1,
+//     email: "john@example.com",
+//     date: "2023-05-10",
+//     content: "Great product!",
+//     rating: 5,
+//   },
+//   {
+//     id: 2,
+//     email: "jane@example.com",
+//     date: "2023-05-09",
+//     content: "Love it!",
+//     rating: 4,
+//   },
+//   // Add more review objects here
+// ];
 
-const newReview = ref({
-  author: "",
-  content: "",
+// const newReview = ref({
+//   author: "",
+//   content: "",
+// });
+
+// const submitReview = () => {
+//   if (newReview.value.author && newReview.value.content) {
+//     const review = {
+//       id: reviews.value.length + 1,
+//       author: newReview.value.author,
+//       date: new Date().toLocaleDateString("en-US", {
+//         month: "long",
+//         day: "numeric",
+//         year: "numeric",
+//       }),
+//       content: newReview.value.content,
+//     };
+//     reviews.value.unshift(review);
+//     newReview.value.author = "";
+//     newReview.value.content = "";
+//   }
+// };
+const product = reactive({
+  name: '',
+  price: '',
+  image: '',
+  description: '',
+  details: ''
 });
+const fetchProductData = async () => {
+  const route = useRoute();
+  const itemName = route.query.item_name;
+  const response = await fetch(`http://localhost/Tunezz/Tunezz/APIs/appfunctions/singleproduct.php?item_name=${itemName}`);
+  const data = await response.json();
+  console.log("Fetched data:", data);
 
-const submitReview = () => {
-  if (newReview.value.author && newReview.value.content) {
-    const review = {
-      id: reviews.value.length + 1,
-      author: newReview.value.author,
-      date: new Date().toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      }),
-      content: newReview.value.content,
-    };
-    reviews.value.unshift(review);
-    newReview.value.author = "";
-    newReview.value.content = "";
+  if (data && data.length > 0) {
+    const fetchedProduct = data[0];
+    // Update the 'product' object with the fetched data
+    product.name = fetchedProduct.Name;
+    product.price = fetchedProduct.Price;
+    product.image = fetchedProduct.Pic; // Updated property name
+    product.description = fetchedProduct.Type; // Updated property name
+    product.details = fetchedProduct.details;
+    // You might need to update colors, sizes, highlights, etc., depending on the data structure in your API response
   }
 };
-
-const product = {
-  name: "Basic Tee 6-Pack",
-  price: "$192",
-  href: "#",
-  breadcrumbs: [
-    { id: 1, name: "Men", href: "#" },
-    { id: 2, name: "Clothing", href: "#" },
-  ],
-  image:
-    "https://cdn.shopify.com/s/files/1/0489/9300/9827/files/1962_Martin_00-16c1_600x898.jpg?v=1683139172",
-
-  colors: [
-    { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-    { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
-    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-  ],
-  sizes: [
-    { name: "XXS", inStock: false },
-    { name: "XS", inStock: true },
-    { name: "S", inStock: true },
-    { name: "M", inStock: true },
-    { name: "L", inStock: true },
-    { name: "XL", inStock: true },
-    { name: "2XL", inStock: true },
-    { name: "3XL", inStock: true },
-  ],
-  description:
-    'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
-  highlights: [
-    "Hand cut and sewn locally",
-    "Dyed with our proprietary colors",
-    "Pre-washed & pre-shrunk",
-    "Ultra-soft 100% cotton",
-  ],
-  details:
-    'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
-};
-
-const selectedColor = ref(product.colors[0]);
-const selectedSize = ref(product.sizes[2]);
+// const selectedColor = ref(product.colors[0]);
+// const selectedSize = ref(product.sizes[2]);
+onMounted(fetchProductData);
 </script>
