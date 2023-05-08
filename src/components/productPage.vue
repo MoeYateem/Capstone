@@ -112,7 +112,8 @@ export default {
               id: index + 1,
               name: instrument.name,
               href: "#",
-              imageSrc: "../assets/" + instrument.pic,
+              imageSrc: "http://localhost/Tunezz/Tunezz/src/assets/" + instrument.pic
+,
               imageAlt: `Front of ${instrument.name}`,
               price: `$${instrument.price}`,
               color: "", // You'll need to add color in the PHP API response or handle it differently
