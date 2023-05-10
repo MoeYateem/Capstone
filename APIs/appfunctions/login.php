@@ -36,14 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         if($count>0){
             session_start();
             $_SESSION['email'] = $email;
-
-           $Message = "Successful login!";
+        
+            $Message = "Successful login!";
+            $session_id = session_id();
         }else{
             $Message = "Wrong credentials";
         }
     // }else{
     //    $Message = "Wrong Token";
     // }
-    $response[] = array("Message"=>$Message);
+    $response[] = array("Message"=>$Message, "session_id"=>$session_id);
     echo json_encode($response);
 }
