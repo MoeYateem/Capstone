@@ -142,11 +142,6 @@
                 >
                   Register
                 </button>
-                <a
-                  href="#"
-                  class="text-primary font-semibold hover:underline text-lg mt-4 sm:mt-0"
-                  >Forgot Password?</a
-                >
               </div>
             </form>
             <!-- Sign in link -->

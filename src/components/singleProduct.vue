@@ -36,55 +36,18 @@
         <div class="mt-4 lg:row-span-3 lg:mt-0">
           <h2 class="sr-only">Product information</h2>
           <p class="text-3xl tracking-tight text-primary">
-            {{ product.price }}
+            {{ product.price }}$
           </p>
 
           <!-- Reviews -->
 
           <form class="mt-10">
-            <!-- Colors -->
-            <div>
-              <h3 class="text-sm font-medium text-primary">Color</h3>
 
-              <RadioGroup v-model="selectedColor" class="mt-4">
-                <RadioGroupLabel class="sr-only"
-                  >Choose a color</RadioGroupLabel
-                >
-                <div class="flex items-center space-x-3">
-                  <RadioGroupOption
-                    as="template"
-                    v-for="color in product.colors"
-                    :key="color.name"
-                    :value="color"
-                    v-slot="{ active, checked }"
-                  >
-                    <div
-                      :class="[
-                        color.selectedClass,
-                        active && checked ? 'ring ring-offset-1' : '',
-                        !active && checked ? 'ring-2' : '',
-                        'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none',
-                      ]"
-                    >
-                      <RadioGroupLabel as="span" class="sr-only">
-                        {{ color.name }}
-                      </RadioGroupLabel>
-                      <span
-                        aria-hidden="true"
-                        :class="[
-                          color.class,
-                          'h-8 w-8 rounded-full border border-black border-opacity-10',
-                        ]"
-                      />
-                    </div>
-                  </RadioGroupOption>
-                </div>
-              </RadioGroup>
-            </div>
 
             <button
-              type="submit"
+              type="cartadd"
               class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-8 py-3 text-base font-medium text-white hover:bg-primary/80 active:translate-y-0.5 transition-all duration-200 ease-in-out"
+              @click="handleAddToCart"
             >
               Add to bag
             </button>
@@ -103,21 +66,6 @@
             </div>
           </div>
 
-          <div class="mt-10">
-            <h3 class="text-sm font-medium text-primary">Highlights</h3>
-
-            <div class="mt-4">
-              <ul role="list" class="list-disc space-y-2 pl-4 text-sm">
-                <li
-                  v-for="highlight in product.highlights"
-                  :key="highlight"
-                  class="text-white"
-                >
-                  <span class="text-white">{{ highlight }}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
 
           <div class="mt-10">
             <h2 class="text-sm font-medium text-primary">Details</h2>
@@ -132,7 +80,7 @@
   </div>
 
   <!-- Review section -->
-  <!-- <div
+  <div
     class="w-full mx-auto px-4 py-8 flex flex-col lg:flex-row justify-evenly items-center"
   >
     <div class="mb-8 lg:w-2/3 p-10 w-full">
@@ -145,31 +93,16 @@
         >
           <div class="flex justify-between items-center">
             <h3 class="text-lg font-medium text-primary">{{ review.email }}</h3>
-            <p class="text-sm text-white">{{ review.date }}</p>
           </div>
-          <p class="text-white mt-2">{{ review.content }}</p>
-          <div class="flex mt-2">
-            <StarRating :rating="review.rating" />
-          </div>
+          <p class="text-white mt-2">{{ review.review }}</p>
+         
         </li>
       </ul>
     </div>
     <div class="lg:w-1/3 p-10 w-full">
       <h2 class="text-2xl font-bold mb-4 text-primary">Write a Review</h2>
       <form @submit.prevent="submitReview">
-        <div class="mb-4">
-          <label for="email" class="text-primary">Your Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="newReview.email"
-            class="mt-2 block w-full rounded-md bg-gray-100 bg-opacity-70 border-transparent focus:border-primary focus:bg-white focus:ring-0 px-4 py-3 text-lg"
-          />
-        </div>
-        <div class="mb-4">
-          <label class="text-primary">Rating</label>
-          <StarRating v-model="newReview.rating" />
-        </div>
+       
         <div class="mb-4">
           <label for="content" class="text-primary">Review</label>
           <textarea
@@ -182,18 +115,20 @@
         <button
           type="submit"
           class="px-4 py-2 bg-primary text-white font-medium rounded"
+          
         >
           Submit Review
         </button>
       </form>
     </div>
-  </div> -->
+  </div>
 </template>
 
 <!--SCRIPT-->
 <script setup>
 import { ref, computed, onMounted , reactive } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from "@headlessui/vue";
 // StarRating component
@@ -284,6 +219,53 @@ const product = reactive({
   description: '',
   details: ''
 });
+const userEmail = ref('');
+const reviews = ref([]);
+const newReview = ref({ email: "", rating: 0, content: "" });
+
+const fetchUserEmail = async () => {
+  try {
+    const response = await axios.get("http://localhost/Tunezz/Tunezz/APIs/appfunctions/session.php", {
+      headers: {
+        "Session-ID": localStorage.getItem("session_id")
+      }
+    });
+    userEmail.value = response.data;
+    console.log("User email:", userEmail.value);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+const fetchReviews = async () => {
+  console.log("Product name:", product.name);
+  
+  try {
+    const url = encodeURIComponent(`http://localhost/Tunezz/Tunezz/APIs/get_review.php?instrument_name=${product.name.replace(" ", '')}`);
+
+    console.log(url);
+    // const response = await fetch(url, { mode: "cors" });
+    const response = await fetch(`http://localhost/Tunezz/Tunezz/APIs/appfunctions/get_review.php?instrument_name=${product.name}`, { mode: "cors" });
+
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      reviews.value = data.map(review => {
+        return {
+          email: review.email,
+          rating: review.rating,
+          review: review.review
+        }
+      });
+      console.log(reviews.value);
+      console.log(data);
+    } else {
+      console.log("Error fetching reviews:", data);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
 const fetchProductData = async () => {
   const route = useRoute();
   const itemName = route.query.item_name;
@@ -293,16 +275,104 @@ const fetchProductData = async () => {
 
   if (data && data.length > 0) {
     const fetchedProduct = data[0];
-    // Update the 'product' object with the fetched data
+
     product.name = fetchedProduct.Name;
     product.price = fetchedProduct.Price;
-    product.image = fetchedProduct.Pic; // Updated property name
-    product.description = fetchedProduct.Type; // Updated property name
+    product.image = fetchedProduct.Pic;
+    product.description = fetchedProduct.Type;
     product.details = fetchedProduct.details;
-    // You might need to update colors, sizes, highlights, etc., depending on the data structure in your API response
   }
 };
-// const selectedColor = ref(product.colors[0]);
-// const selectedSize = ref(product.sizes[2]);
-onMounted(fetchProductData);
+
+
+const addToCart = async () => {
+  const url = 'http://localhost/Tunezz/Tunezz/APIs/appfunctions/add_cart.php';
+  
+  const email = userEmail.value;
+  const itemName = product.name;
+
+  const data = {
+    cartadd: true,
+    email: email,
+    item_name: itemName
+  };
+  console.log("Data to be sent:", data);
+
+  try {
+    const response = await axios.post(url, new URLSearchParams(data));
+    console.log("Response:", response.data);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+const submitReview = async () => {
+  const url = 'http://localhost/Tunezz/Tunezz/APIs/appfunctions/Add_review.php';
+  
+  const email = userEmail.value;
+  const itemName = product.name;
+  const review= newReview.value.content;
+  const data = {
+    // cartadd: true,
+    email: email,
+    instrument_name: itemName,
+    review: review,
+  };
+  console.log("Data to be sent:", data);
+
+  try {
+    const response = await axios.post(url, new URLSearchParams(data));
+    console.log("Response:", response.data);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+// const submitReview = async () => {
+//   try {
+//     const response = await axios.post("http://localhost/Tunezz/Tunezz/APIs/appfunctions/Add_review.php", {
+//       email: userEmail.value,
+//       instrument_name: product.name,
+     
+//       review: newReview.value.content,
+//     });
+//     console.log("bro lek",email,instrument_name);
+//     console.log("Response:", response.data);
+//     reviews.value.push({
+//       email:userEmail.value,
+//       review: newReview.value.content,
+//       instrument_name: product.name
+//     });
+//     newReview.value.email = "";
+//     newReview.value.rating = 0;
+//     newReview.value.content = "";
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// };
+
+// onMounted(fetchProductData)
+
+
+
+// Integration with add_to_cart.php file
+const handleAddToCart = () => {
+  event.preventDefault();
+  addToCart();
+};
+
+
+onMounted(async () => {
+  await fetchProductData();
+  await fetchUserEmail();
+  await fetchReviews();
+});
+// return {
+//       product,
+//       userEmail,
+//       reviews,
+//       newReview,
+//       submitReview,
+//       addToCart,
+//     };
+
+
 </script>

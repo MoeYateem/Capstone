@@ -39,7 +39,7 @@
           :key="product.id"
           class="group relative"
         >
-          <router-link to="/singleProduct">
+        <router-link :to="'/singleProduct?item_name=' + product.name">
             <div
               class="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
             >

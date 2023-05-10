@@ -4,8 +4,11 @@ import signup from "../components/signup.vue";
 import productPage from "../components/productPage.vue";
 import singleProduct from "../components/singleProduct.vue";
 import Home from "../components/home.vue";
+import account from "../components/account.vue"
+
 
 const routes = [
+  { path: "/account", name: "account", component: account },
   { path: "/", name: "home", component: Home },
   { path: "/login", name: "login", component: login },
   { path: "/signup", name: "signup", component: signup },
@@ -19,3 +22,4 @@ const router = createRouter({
 });
 
 export default router;
+
