@@ -13,7 +13,7 @@
               Full name
             </dt>
             <dd class="mt-1 text-sm leading-6 text-black sm:col-span-2 sm:mt-0">
-              {{ fullName }}
+              <!-- {{ fullName }} -->
             </dd>
           </div>
 
@@ -47,15 +47,16 @@
                   </div>
                 </li>
               </ul>
-
+<!-- ta3lahon -->
               <button
                 type="button"
-                @click="openAddCardForm = true"
+                @click="showCardForm"
                 class="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
                 Add Card
               </button>
             </dd>
+            
 
             <!-- Popup Form -->
             <div
@@ -66,8 +67,8 @@
                 <h3 class="text-lg font-medium text-gray-900 mb-4">
                   Add Credit Card
                 </h3>
-                <form @submit.prevent="submitForm">
-                  <div class="mb-4">
+                <form @submit.prevent="addCard">
+                  <!-- <div class="mb-4">
                     <label
                       for="cardName"
                       class="block text-sm font-medium text-gray-700"
@@ -80,7 +81,7 @@
                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
                       required
                     />
-                  </div>
+                  </div> -->
                   <div class="mb-4">
                     <label
                       for="expiryDate"
@@ -89,7 +90,7 @@
                     >
                     <input
                       required
-                      v-model="newCard.expiryDate"
+                      v-model="newCard.expiry_date"
                       id="expiryDate"
                       type="date"
                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
@@ -117,7 +118,7 @@
                       >Card Number (16 digits only)</label
                     >
                     <input
-                      v-model="newCard.ccNumber"
+                      v-model="newCard.card_number"
                       id="cardNumber"
                       type="text"
                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
@@ -134,7 +135,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="openAddCardForm = false"
+                      @click="hideCardForm"
                       class="ml-2 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                     >
                       Cancel
@@ -216,7 +217,7 @@
 
               <button
                 type="button"
-                @click="openAddAddressForm = true"
+                @click="showAddressForm"
                 class="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
                 Add Address
@@ -225,64 +226,66 @@
 
             <!-- Address Form -->
             <div
-              v-if="openAddAddressForm"
-              class="fixed inset-0 flex items-center justify-center z-50"
-            >
-              <div class="bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">
-                  Add Address
-                </h3>
-                <form @submit.prevent="submitAddressForm">
-                  <div class="mb-4">
-                    <label
-                      for="postalCode"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      Postal Code (4 digits only)
-                    </label>
-                    <input
-                      v-model="newAddress.postalCode"
-                      id="postalCode"
-                      type="text"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
-                      required
-                      maxlength="4"
-                      @input="restrictNonNumericPostal"
-                    />
-                  </div>
-                  <div class="mb-4">
-                    <label
-                      for="address"
-                      class="block text-sm font-medium text-gray-700"
-                    >
-                      Address
-                    </label>
-                    <textarea
-                      v-model="newAddress.address"
-                      id="address"
-                      rows="4"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
-                      required
-                    ></textarea>
-                  </div>
-                  <div class="flex justify-end">
-                    <button
-                      type="submit"
-                      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                    >
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      @click="openAddAddressForm = false"
-                      class="ml-2 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+  v-if="openAddAddressForm"
+  class="fixed inset-0 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <h3 class="text-lg font-medium text-gray-900 mb-4">
+      Add Address
+    </h3>
+                
+    <form @submit.prevent="addAddress">
+      <div class="mb-4">
+        <label
+          for="postalCode"
+          class="block text-sm font-medium text-gray-700"
+        >
+          Postal Code (4 digits only)
+        </label>
+        <input
+          v-model="newAddress.postalCode"
+          id="postalCode"
+          type="text"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
+          required
+          maxlength="4"
+          @input="restrictNonNumericPostal"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          for="address"
+          class="block text-sm font-medium text-gray-700"
+        >
+          Address
+        </label>
+        <textarea
+          v-model="newAddress.address"
+          id="address"
+          rows="4"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
+          required
+        ></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button
+          type="submit"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          @click="openAddAddressForm = false"
+          class="ml-2 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
           </div>
 
           <!-- Error Message -->
@@ -344,25 +347,20 @@ import { ref, onMounted, reactive } from "vue";
 import axios from "axios";
 
 export default {
-  setup() {
+  
+  data() {
     const userEmail = ref("");
     const cards = reactive([]);
     // const addresses = reactive([]);
     const addresses = ref(null);
     const loading = ref(true);
     const error = ref("");
+    const newAddress = reactive({ postalCode: "", address: "" });
+    const newCard = reactive({ credit_number: "", srn: "", expiry_date:"" });
 
-    // const fetchCards = async (email) => {
-    //   try {
-    //     const response = await axios.get(`http://localhost/Tunezz/Tunezz/APIs/appfunctions/get_card.php?email=${email}`);
-    //     cards.value = response.data;
-    //     loading.value = false;
-    //     console.log(cards.value);
-    //   } catch (err) {
-    //     error.value = `Error fetching cards: ${err}`;
-    //     loading.value = false;
-    //   }
-    // };
+    
+
+ 
     const fetchCards = async (email) => {
       try {
         const response = await fetch(
@@ -388,15 +386,18 @@ export default {
     const data = await response.json();
     console.log(data);
 
-    addresses.value = {
-      postal_code: data[0].postal_code,
-      address: data[0].address,
-    };
-    console.log("addresses", addresses.value);
+    if (data && data.length > 0) {
+      addresses.value = {
+        postal_code: data[0].postal_code,
+        address: data[0].address,
+      };
+      console.log("addresses", addresses.value);
+    }
   } catch (error) {
     console.error("Error fetching address data:", error);
   }
 };
+
 
 
     const fetchUserEmail = async () => {
@@ -415,234 +416,293 @@ export default {
         console.error("Error:", error);
       }
     };
+ 
+
+
 
     onMounted(async () => {
       userEmail.value = await fetchUserEmail();
       fetchCards(userEmail.value);
       fetchAddress(userEmail.value);
     });
-
     return {
       userEmail,
       addresses,
       cards,
       loading,
       error,
+      showAddressConfirmation: false,
+      addressToRemove: null,
+      showConfirmation: false,
+      itemToRemove: null,
+      newAddress,
+      openAddAddressForm: false,
+      openAddCardForm: false,
+      newCard,
+
+      addressErrorMessage: "", // Error message to display
+
+      errorMessage: "", // Error message to display
+
+      // newCard: { name: "", expiryDate: "", srn: "", ccNumber: "" },
     };
+    
+  
+    
+    
+  },
+  created() {
+    this.fetchUserEmail();
+  },
+  
+  methods: {
+     fetchUserEmail: async function() {
+      try {
+        const response = await axios.get(
+          "http://localhost/Tunezz/Tunezz/APIs/appfunctions/session.php",
+          {
+            headers: {
+              "Session-ID": localStorage.getItem("session_id"),
+            },
+          }
+        );
+        console.log("User email:", response.data);
+        this.userEmail = response.data;
+        return response.data;
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+    
+    addAddress: async function() {
+      const url = 'http://localhost/Tunezz/Tunezz/APIs/appfunctions/add_address.php';
+      const email = this.userEmail;
+      const postal_code = this.newAddress.postalCode;
+      const address = this.newAddress.address;
+      const data = {
+        submit:true,
+        email: email,
+        postal_code: postal_code,
+        address: address
+      };
+      console.log("Data to be sent:", data);
+      try {
+        const response = await axios.post(url, new URLSearchParams(data));
+        console.log("Response:", response.data);
+        this.hideAddressForm();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    addCard: async function() {
+      const url = 'http://localhost/Tunezz/Tunezz/APIs/appfunctions/add_card.php';
+      const email = this.userEmail;
+      const card_number = this.newCard.card_number;
+      const srn = this.newCard.srn;
+      const expiry_date = this.newCard.expiry_date;
+      const data = {
+        submit:true,
+        email: email,
+        card_number: card_number,
+        srn: srn,
+        expiry_date:expiry_date
+      };
+      console.log("Data to be sent:", data);
+      try {
+        const response = await axios.post(url, new URLSearchParams(data));
+        console.log("Response:", response.data);
+        this.hideCardForm();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    
+    // confirmAddressRemoval(id) {
+    //   this.addressToRemove = id;
+    //   this.showAddressConfirmation = true;
+    // },
+    // removeAddressConfirmed() {
+    //   // Remove the address from the list
+    //   this.removeAddress(this.addressToRemove);
+
+    //   // Reset the confirmation state
+    //   this.showAddressConfirmation = false;
+    //   this.addressToRemove = null;
+    // },
+
+    // removeAddress(id) {
+    //   this.addresses = this.addresses.filter((address) => address.id !== id);
+    // },
+    // cancelAddressRemoval() {
+    //   // Reset the confirmation state
+    //   this.showAddressConfirmation = false;
+    //   this.addressToRemove = null;
+    // },
+
+    // confirmCardRemoval(id) {
+    //   this.itemToRemove = id;
+    //   this.showConfirmation = true;
+    // },
+
+    // removeConfirmed() {
+    //   // Remove the item from the list
+    //   this.creditCards = this.creditCards.filter(
+    //     (card) => card.id !== this.itemToRemove
+    //   );
+
+    //   // Reset the confirmation state
+    //   this.showConfirmation = false;
+    //   this.itemToRemove = null;
+    // },
+
+    // cancelRemoval() {
+    //   // Reset the confirmation state
+    //   this.showConfirmation = false;
+    //   this.itemToRemove = null;
+    // },
+    // removeCard(id) {
+    //   this.itemToRemove = id;
+    //   this.showConfirmation = true;
+    // },
+
+    // submitAddressForm(event) {
+    //   event.preventDefault();
+
+    //   // Reset the error message
+    //   this.addressErrorMessage = "";
+
+    //   // Validate the postal code and address fields
+    //   if (
+    //     this.newAddress.postalCode &&
+    //     /^\d{4}$/.test(this.newAddress.postalCode) &&
+    //     this.newAddress.address
+    //   ) {
+    //     // Form is valid, submit it
+    //     this.addAddress();
+    //   } else {
+    //     // Form is not valid, set the error message
+    //     this.addressErrorMessage = "Please fill in all fields correctly.";
+    //   }
+    // },
+
+    showAddressForm(){
+      this.openAddAddressForm = true;
+     // console.log(this.openAddAddressForm);
+    },
+
+    showCardForm(){
+      this.openAddCardForm = true;
+    },
+
+    hideAddressForm(){
+      this.openAddAddressForm = false;
+    },
+
+    hideCardForm(){
+      this.openAddCardForm = false;
+    },
+
+    // addAddress() {
+    //   // Add validation and processing logic for the new address
+    //   // For simplicity, we're directly pushing the new address to the list here
+    //   this.addresses.push({
+    //     id: Date.now(),
+    //     postalCode: this.newAddress.postalCode,
+    //     address: this.newAddress.address,
+    //   });
+
+      // Reset the form fields
+    //   this.newAddress.postalCode = "";
+    //   this.newAddress.address = "";
+
+    //   // Close the add address form
+    //   this.openAddAddressForm = false;
+    // },
+    // submitForm(event) {
+    //   event.preventDefault();
+
+    //   // Reset the error message
+    //   this.errorMessage = "";
+
+    //   // Validate all fields before submitting the form
+    //   if (
+    //     this.newCard.name &&
+    //     this.newCard.expiryDate &&
+    //     this.newCard.srn.length === 3 &&
+    //     /^\d+$/.test(this.newCard.srn) &&
+    //     this.newCard.ccNumber.length === 19 // including spaces
+    //   ) {
+    //     // Form is valid, submit it
+    //     this.addCard(); // Call the addCard method to process the new card
+    //   } else {
+    //     // Form is not valid, set the error message
+    //     this.errorMessage = "Please fill in all fields correctly.";
+    //   }
+    // },
+
+    // handleCreditCardInput(event) {
+    //   this.restrictCreditCardNumber(event);
+    //   this.formatCreditCardNumber();
+    // },
+    // formatCreditCardNumber() {
+    //   // Add spaces between every 4 digits
+    //   this.newCard.ccNumber = this.newCard.ccNumber.replace(
+    //     /(\d{4})(?=\d)/g,
+    //     "$1 "
+    //   );
+    // },
+    // addCard() {
+    //   // Add validation and processing logic for the new card
+    //   // For simplicity, we're directly pushing the new card to the list here
+    //   this.creditCards.push({
+    //     id: Date.now(),
+    //     name: this.newCard.name,
+    //     expiryDate: this.newCard.expiryDate,
+    //     srn: this.newCard.srn,
+    //     ccNumber: this.newCard.ccNumber,
+    //   });
+
+    //   // Reset the form fields
+    //   this.newCard.name = "";
+    //   this.newCard.expiryDate = "";
+    //   this.newCard.srn = "";
+    //   this.newCard.ccNumber = "";
+
+    //   // Close the add card form
+    //   this.openAddCardForm = false;
+    // },
+    // restrictNonNumeric(event) {
+    //   const input = event.target;
+    //   input.value = input.value.replace(/\D/g, ""); // Remove non-numeric characters
+
+    //   // Limit the input length to 3 digits
+    //   if (input.value.length > 3) {
+    //     input.value = input.value.slice(0, 3);
+    //   }
+    // },
+    // restrictNonNumericPostal(event) {
+    //   const input = event.target;
+    //   input.value = input.value.replace(/\D/g, ""); // Remove non-numeric characters
+
+    //   // Limit the input length to 4 digits
+    //   if (input.value.length > 4) {
+    //     input.value = input.value.slice(0, 4);
+    //   }
+    // },
+    // restrictCreditCardNumber() {
+    //   // Remove non-numeric characters from the input
+    //   this.newCard.ccNumber = this.newCard.ccNumber.replace(/\D/g, "");
+
+    //   // Limit the input to 16 digits
+    //   if (this.newCard.ccNumber.length > 16) {
+    //     this.newCard.ccNumber = this.newCard.ccNumber.slice(0, 16);
+    //   }
+    // },
   },
 };
-// export default {
-//   data() {
-//     return {
-//       showAddressConfirmation: false,
-//       addressToRemove: null,
-//       showConfirmation: false,
-//       itemToRemove: null,
-//       fullName: "Margot Foster",
-//       // emailAddress: "",
-//       addresses: [
-//         {
-//           id: 1,
-//           postalCode: "1234",
-//           address: "123 Main St",
-//         },
-//         {
-//           id: 2,
-//           postalCode: "5678",
-//           address: "456 Elm St",
-//         },
-//       ],
-//       newAddress: { postalCode: "", address: "" },
-//       openAddAddressForm: false,
-//       addressErrorMessage: "", // Error message to display
 
-//       errorMessage: "", // Error message to display
+  
 
-//       // creditCards: [
-//       //   {
-//       //     id: 1,
-//       //     name: "John Doe",
-//       //     expiryDate: "12/23",
-//       //     srn: "123",
-//       //     ccNumber: "1234567890123456",
-//       //   },
-//       //   {
-//       //     id: 2,
-//       //     name: "Jane Smith",
-//       //     expiryDate: "10/24",
-//       //     srn: "456",
-//       //     ccNumber: "9876543210987654",
-//       //   },
-//       // ],
-//       newCard: { name: "", expiryDate: "", srn: "", ccNumber: "" },
-//       openAddCardForm: false,
-//     };
-//   },
-//   methods: {
-//     confirmAddressRemoval(id) {
-//       this.addressToRemove = id;
-//       this.showAddressConfirmation = true;
-//     },
-//     removeAddressConfirmed() {
-//       // Remove the address from the list
-//       this.removeAddress(this.addressToRemove);
 
-//       // Reset the confirmation state
-//       this.showAddressConfirmation = false;
-//       this.addressToRemove = null;
-//     },
-
-//     removeAddress(id) {
-//       this.addresses = this.addresses.filter((address) => address.id !== id);
-//     },
-//     cancelAddressRemoval() {
-//       // Reset the confirmation state
-//       this.showAddressConfirmation = false;
-//       this.addressToRemove = null;
-//     },
-
-//     confirmCardRemoval(id) {
-//       this.itemToRemove = id;
-//       this.showConfirmation = true;
-//     },
-
-//     removeConfirmed() {
-//       // Remove the item from the list
-//       this.creditCards = this.creditCards.filter(
-//         (card) => card.id !== this.itemToRemove
-//       );
-
-//       // Reset the confirmation state
-//       this.showConfirmation = false;
-//       this.itemToRemove = null;
-//     },
-
-//     cancelRemoval() {
-//       // Reset the confirmation state
-//       this.showConfirmation = false;
-//       this.itemToRemove = null;
-//     },
-//     removeCard(id) {
-//       this.itemToRemove = id;
-//       this.showConfirmation = true;
-//     },
-
-//     submitAddressForm(event) {
-//       event.preventDefault();
-
-//       // Reset the error message
-//       this.addressErrorMessage = "";
-
-//       // Validate the postal code and address fields
-//       if (
-//         this.newAddress.postalCode &&
-//         /^\d{4}$/.test(this.newAddress.postalCode) &&
-//         this.newAddress.address
-//       ) {
-//         // Form is valid, submit it
-//         this.addAddress();
-//       } else {
-//         // Form is not valid, set the error message
-//         this.addressErrorMessage = "Please fill in all fields correctly.";
-//       }
-//     },
-
-//     addAddress() {
-//       // Add validation and processing logic for the new address
-//       // For simplicity, we're directly pushing the new address to the list here
-//       this.addresses.push({
-//         id: Date.now(),
-//         postalCode: this.newAddress.postalCode,
-//         address: this.newAddress.address,
-//       });
-
-//       // Reset the form fields
-//       this.newAddress.postalCode = "";
-//       this.newAddress.address = "";
-
-//       // Close the add address form
-//       this.openAddAddressForm = false;
-//     },
-//     submitForm(event) {
-//       event.preventDefault();
-
-//       // Reset the error message
-//       this.errorMessage = "";
-
-//       // Validate all fields before submitting the form
-//       if (
-//         this.newCard.name &&
-//         this.newCard.expiryDate &&
-//         this.newCard.srn.length === 3 &&
-//         /^\d+$/.test(this.newCard.srn) &&
-//         this.newCard.ccNumber.length === 19 // including spaces
-//       ) {
-//         // Form is valid, submit it
-//         this.addCard(); // Call the addCard method to process the new card
-//       } else {
-//         // Form is not valid, set the error message
-//         this.errorMessage = "Please fill in all fields correctly.";
-//       }
-//     },
-
-//     handleCreditCardInput(event) {
-//       this.restrictCreditCardNumber(event);
-//       this.formatCreditCardNumber();
-//     },
-//     formatCreditCardNumber() {
-//       // Add spaces between every 4 digits
-//       this.newCard.ccNumber = this.newCard.ccNumber.replace(
-//         /(\d{4})(?=\d)/g,
-//         "$1 "
-//       );
-//     },
-//     addCard() {
-//       // Add validation and processing logic for the new card
-//       // For simplicity, we're directly pushing the new card to the list here
-//       this.creditCards.push({
-//         id: Date.now(),
-//         name: this.newCard.name,
-//         expiryDate: this.newCard.expiryDate,
-//         srn: this.newCard.srn,
-//         ccNumber: this.newCard.ccNumber,
-//       });
-
-//       // Reset the form fields
-//       this.newCard.name = "";
-//       this.newCard.expiryDate = "";
-//       this.newCard.srn = "";
-//       this.newCard.ccNumber = "";
-
-//       // Close the add card form
-//       this.openAddCardForm = false;
-//     },
-//     restrictNonNumeric(event) {
-//       const input = event.target;
-//       input.value = input.value.replace(/\D/g, ""); // Remove non-numeric characters
-
-//       // Limit the input length to 3 digits
-//       if (input.value.length > 3) {
-//         input.value = input.value.slice(0, 3);
-//       }
-//     },
-//     restrictNonNumericPostal(event) {
-//       const input = event.target;
-//       input.value = input.value.replace(/\D/g, ""); // Remove non-numeric characters
-
-//       // Limit the input length to 4 digits
-//       if (input.value.length > 4) {
-//         input.value = input.value.slice(0, 4);
-//       }
-//     },
-//     restrictCreditCardNumber() {
-//       // Remove non-numeric characters from the input
-//       this.newCard.ccNumber = this.newCard.ccNumber.replace(/\D/g, "");
-
-//       // Limit the input to 16 digits
-//       if (this.newCard.ccNumber.length > 16) {
-//         this.newCard.ccNumber = this.newCard.ccNumber.slice(0, 16);
-//       }
-//     },
-//   },
-// };
 </script>
+
