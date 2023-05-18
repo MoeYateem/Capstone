@@ -111,19 +111,19 @@ import ForgotPasswordForm from "./forgotPassword.vue";
 import axios from "axios";
 
 export default {
-  components:{
+  components: {
     ForgotPasswordForm,
   },
   data() {
     return {
       email: "",
       password: "",
-      showPassword:false,
+      showPassword: false,
       showForgotPasswordForm: false,
     };
   },
   methods: {
-    togglePasswordVisibility(){
+    togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
     hideForgotPasswordModal() {
@@ -134,24 +134,36 @@ export default {
     },
     async login() {
       try {
-        const response = await axios.post("http://localhost/Tunezz/Tunezz/APIs/appfunctions/login.php", {
-          email: this.email,
-          password: this.password,
-        });
+        const response = await axios.post(
+          "http://localhost/Tunezz/Tunezz/APIs/appfunctions/login.php",
+          {
+            email: this.email,
+            password: this.password,
+          }
+        );
 
         if (response.data[0].Message === "Successful login!") {
+          const role =
+            response.data[0].email === "admin@gmail.com" ? "admin" : "user";
+          
           localStorage.setItem("session_id", response.data[0].session_id);
-          alert("Login successful!");
-          window.location.href = "/";
+          localStorage.setItem("role", role);
+
+          if (role === "admin") {
+            // alert("Login successful! Welcome Admin!");
+            window.location.href = "/admin";
+          } else {
+            // alert("Login successful!");
+            window.location.href = "/";
+          }
         } else {
-          alert("Wrong credentials. Please try again.");
+          // alert("Wrong credentials. Please try again.");
         }
       } catch (error) {
         console.error("An error occurred during login:", error);
-        alert("An error occurred. Please try again.");
+        // alert("An error occurred. Please try again.");
       }
     },
   },
 };
 </script>
-

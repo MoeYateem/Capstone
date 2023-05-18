@@ -5,7 +5,7 @@
     >
       <div class="bg-white p-8 rounded-lg shadow-lg" @click.stop>
         <h2 class="text-xl font-semibold mb-4">Forgot Password</h2>
-        <form v-if="!showSuccess" @submit.prevent="submitForm">
+        <form v-if="!showSuccess" @submit.prevent="sendPasswordResetEmail(this.email),closeForm()">
           <div class="mb-4">
             <label for="email" class="block mb-2">Email</label>
             <input
@@ -44,40 +44,44 @@
   </template>
   
   <script>
+  import axios from 'axios';
+  
   export default {
     data() {
       return {
         email: "",
-        showSuccess: false,
-        showFailure: false,
+        // showSuccess: false,
+        // showFailure: false,
       };
     },
     methods: {
       closeForm() {
         this.$emit("close");
       },
-      submitForm() {
-        // Perform forgot password logic here
-        // You can access the entered email through `this.email`
-        // Send the email to the server or perform any other necessary actions
-        // Show success or failure message accordingly
-        if (this.emailExists(this.email)) {
-          this.showSuccess = true;
-          this.showFailure = false;
-        } else {
-          this.showSuccess = false;
-          this.showFailure = true;
-        }
-      },
-      emailExists(email) {
-        // Dummy email check logic
-        const dummyEmails = [
-          "test@example.com",
-          "user@example.com",
-          "john@example.com",
-        ];
-        return dummyEmails.includes(email);
-      },
+      async sendPasswordResetEmail(email) {
+      try {
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+
+        const response = await axios.post('http://localhost/Tunezz/Tunezz/APIs/appfunctions/forgot_password.php', formData);
+        console.log(response.data);
+
+        // Display the response or perform any other actions
+      } catch (error) {
+        console.error(error);
+        // Handle the error
+      }
+    },
+  
+      // emailExists(email) {
+      //   // Dummy email check logic
+      //   const dummyEmails = [
+      //     "test@example.com",
+      //     "user@example.com",
+      //     "john@example.com",
+      //   ];
+      //   return dummyEmails.includes(email);
+      // },
     },
   };
   </script>

@@ -12,6 +12,23 @@ import {
 const cartOpen = ref(false);
 const products = reactive([]);
 const userEmail = ref('');
+// const fetchProductData = async () => {
+//   const route = useRoute();
+//   const itemName = route.query.item_name;
+//   const response = await fetch(`http://localhost/Tunezz/Tunezz/APIs/appfunctions/singleproduct.php?item_name=${itemName}`);
+//   const data = await response.json();
+//   console.log("Fetched data:", data);
+
+//   if (data && data.length > 0) {
+//     const fetchedProduct = data[0];
+
+//     product.name = fetchedProduct.Name;
+//     product.price = fetchedProduct.Price;
+//     product.image = fetchedProduct.Pic;
+//     product.description = fetchedProduct.Type;
+//     product.details = fetchedProduct.details;
+//   }
+// };
 
 
 const fetchCartData = async (email) => {
@@ -35,6 +52,33 @@ const fetchCartData = async (email) => {
     console.error('Error fetching cart data:', error);
   }
 };
+const deleteCart = async (itemName) => {
+  const url = 'http://localhost/Tunezz/Tunezz/APIs/appfunctions/remove_cart.php';
+  
+  const email = userEmail.value;
+  
+
+  const data = {
+    cartremove: true,
+    email: email,
+    item_name: itemName
+  };
+  console.log("Data to be sent:", data);
+  
+
+
+  try {
+    const response = await axios.post(url, new URLSearchParams(data));
+    console.log("Response:", response.data);
+    window.location.reload();
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+const handleDeleteToCart = () => {
+  event.preventDefault();
+  deleteCart();
+};
 const fetchUserEmail = async () => {
   try {
     const response = await axios.get("http://localhost/Tunezz/Tunezz/APIs/appfunctions/session.php", {
@@ -52,6 +96,7 @@ const fetchUserEmail = async () => {
 onMounted(async () => {
       await fetchUserEmail();
       await fetchCartData(userEmail.value);
+      
     });
 
 const incrementQuantity = (product) => {
@@ -97,9 +142,9 @@ import {
 const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "Products", href: "/productPage", current: false },
-  { name: "Contact Us", href: "/login", current: false },
+  { name: "Login", href: "/login", current: false },
   { name: "About Us", href: "#", current: false },
-  { name: "Account", href: "/account", current: false },
+  // { name: "Account", href: "/account", current: false },
 ];
 
 const slides = [
@@ -329,7 +374,7 @@ const slides = [
                                   <button
                                     type="button"
                                     class="font-medium text-primary hover:text-indigo-500"
-                                    @click="removeProduct(product)"
+                                    @click="deleteCart(product.id)"
                                   >
                                     Remove
                                   </button>

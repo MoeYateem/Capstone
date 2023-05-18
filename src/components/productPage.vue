@@ -127,6 +127,8 @@ export default {
     },
   },
   mounted() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.selectedType = urlParams.get("selectedType") || "";
     this.fetchInstruments();
   },
 };

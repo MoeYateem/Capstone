@@ -113,7 +113,6 @@
           ></textarea>
         </div>
         <button
-          type="submit"
           class="px-4 py-2 bg-primary text-white font-medium rounded"
           
         >
@@ -301,6 +300,8 @@ const addToCart = async () => {
   try {
     const response = await axios.post(url, new URLSearchParams(data));
     console.log("Response:", response.data);
+    window.location.reload();
+
   } catch (error) {
     console.error('Error:', error);
   }

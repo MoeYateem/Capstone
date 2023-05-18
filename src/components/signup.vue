@@ -196,13 +196,13 @@ export default {
         });
 
         if (response.data.Message === "Email already exists.") {
-          alert("Email already exists. Please use a different email address.");
+          // alert("Email already exists. Please use a different email address.");
         } else if (response.data.Message === "You have successfully registered!") {
-          alert("Registration successful!");
+          // alert("Registration successful!");
           window.location.href = "/login";
           // Redirect to the login page or perform any other necessary action
         } else {
-          alert("Failed to register. Please try again later.");
+          // alert("Failed to register. Please try again later.");
         }
       } catch (error) {
         console.error("An error occurred during registration:", error);
